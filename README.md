@@ -2,6 +2,8 @@
 
 A Pin Keyboard Flutter package.
 
+![Screenshot](screenshot/pin_keyboard.png)
+
 ## Usage
 
 ```dart
