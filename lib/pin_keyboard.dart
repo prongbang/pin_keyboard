@@ -7,35 +7,35 @@ class PinKeyboard extends StatefulWidget {
   final double space;
   final int length;
   final double maxWidth;
-  final void Function(String) onChange;
-  final void Function(String) onConfirm;
-  final VoidCallback onBiometric;
+  final void Function(String)? onChange;
+  final void Function(String)? onConfirm;
+  final VoidCallback? onBiometric;
   final bool enableBiometric;
-  final Widget iconBiometric;
-  final Widget iconBackspace;
-  final Color iconBackspaceColor;
-  final Color iconBiometricColor;
-  final Color textColor;
+  final Widget? iconBiometric;
+  final Widget? iconBackspace;
+  final Color? iconBackspaceColor;
+  final Color? iconBiometricColor;
+  final Color? textColor;
   final double fontSize;
   final FontWeight fontWeight;
 
-  const PinKeyboard(
-      {Key key,
-      this.space = 63,
-      @required this.length,
-      @required this.onChange,
-      this.onConfirm,
-      this.onBiometric,
-      this.enableBiometric = false,
-      this.iconBiometric,
-      this.maxWidth = 350,
-      this.iconBackspaceColor,
-      this.iconBiometricColor,
-      this.textColor,
-      this.fontSize = 30,
-      this.fontWeight = FontWeight.bold,
-      this.iconBackspace})
-      : super(key: key);
+  const PinKeyboard({
+    Key? key,
+    this.space = 63,
+    required this.length,
+    required this.onChange,
+    this.onConfirm,
+    this.onBiometric,
+    this.enableBiometric = false,
+    this.iconBiometric,
+    this.maxWidth = 350,
+    this.iconBackspaceColor,
+    this.iconBiometricColor,
+    this.textColor,
+    this.fontSize = 30,
+    this.fontWeight = FontWeight.bold,
+    this.iconBackspace,
+  }) : super(key: key);
 
   @override
   _PinKeyboardState createState() => _PinKeyboardState();
@@ -140,11 +140,11 @@ class _PinKeyboardState extends State<PinKeyboard> {
     if (_pinCode.length < widget.length) {
       _pinCode += number;
       if (widget.onChange != null) {
-        widget.onChange(_pinCode);
+        widget.onChange!(_pinCode);
       }
       if (_pinCode.length == widget.length) {
         if (widget.onConfirm != null) {
-          widget.onConfirm(_pinCode);
+          widget.onConfirm!(_pinCode);
         }
         _pinCode = "";
       }
@@ -153,7 +153,7 @@ class _PinKeyboardState extends State<PinKeyboard> {
 
   void _handleTabBiometric() {
     if (widget.onBiometric != null) {
-      widget.onBiometric();
+      widget.onBiometric!();
     }
   }
 
@@ -161,7 +161,7 @@ class _PinKeyboardState extends State<PinKeyboard> {
     if (_pinCode.length > 0) {
       _pinCode = _pinCode.substring(0, _pinCode.length - 1);
       if (widget.onChange != null) {
-        widget.onChange(_pinCode);
+        widget.onChange!(_pinCode);
       }
     }
   }

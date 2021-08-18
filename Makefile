@@ -3,3 +3,7 @@ publish-dry:
 
 publish:
 	pub publish
+
+upgrade-null-safety:
+	dart pub upgrade --null-safety
+	dart migrate
