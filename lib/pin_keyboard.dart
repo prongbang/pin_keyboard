@@ -2,6 +2,7 @@ library pin_keyboard;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pin_keyboard/pin_keyboard_controller.dart';
 
 class PinKeyboard extends StatefulWidget {
   final double space;
@@ -18,6 +19,7 @@ class PinKeyboard extends StatefulWidget {
   final Color? textColor;
   final double fontSize;
   final FontWeight fontWeight;
+  final PinKeyboardController? controller;
 
   const PinKeyboard({
     Key? key,
@@ -35,6 +37,7 @@ class PinKeyboard extends StatefulWidget {
     this.fontSize = 30,
     this.fontWeight = FontWeight.bold,
     this.iconBackspace,
+    this.controller,
   }) : super(key: key);
 
   @override
@@ -42,7 +45,13 @@ class PinKeyboard extends StatefulWidget {
 }
 
 class _PinKeyboardState extends State<PinKeyboard> {
-  String _pinCode = "";
+  String _pinCode = '';
+
+  @override
+  void initState() {
+    _restListener();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,31 +65,31 @@ class _PinKeyboardState extends State<PinKeyboard> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _createNumber("1", _handleTabNumber),
+                _createNumber('1', _handleTabNumber),
                 Spacer(),
-                _createNumber("2", _handleTabNumber),
+                _createNumber('2', _handleTabNumber),
                 Spacer(),
-                _createNumber("3", _handleTabNumber),
+                _createNumber('3', _handleTabNumber),
               ],
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _createNumber("4", _handleTabNumber),
+                _createNumber('4', _handleTabNumber),
                 Spacer(),
-                _createNumber("5", _handleTabNumber),
+                _createNumber('5', _handleTabNumber),
                 Spacer(),
-                _createNumber("6", _handleTabNumber),
+                _createNumber('6', _handleTabNumber),
               ],
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _createNumber("7", _handleTabNumber),
+                _createNumber('7', _handleTabNumber),
                 Spacer(),
-                _createNumber("8", _handleTabNumber),
+                _createNumber('8', _handleTabNumber),
                 Spacer(),
-                _createNumber("9", _handleTabNumber),
+                _createNumber('9', _handleTabNumber),
               ],
             ),
             Row(
@@ -88,7 +97,7 @@ class _PinKeyboardState extends State<PinKeyboard> {
               children: [
                 _createBiometricIcon(),
                 Spacer(),
-                _createNumber("0", _handleTabNumber),
+                _createNumber('0', _handleTabNumber),
                 Spacer(),
                 _createBackspaceIcon(),
               ],
@@ -99,7 +108,7 @@ class _PinKeyboardState extends State<PinKeyboard> {
     );
   }
 
-  _createNumber(String number, void Function(String) onPress) => InkWell(
+  Widget _createNumber(String number, void Function(String) onPress) => InkWell(
         customBorder: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(widget.space),
         ),
@@ -146,7 +155,9 @@ class _PinKeyboardState extends State<PinKeyboard> {
         if (widget.onConfirm != null) {
           widget.onConfirm!(_pinCode);
         }
-        _pinCode = "";
+        if (widget.controller == null) {
+          _pinCode = '';
+        }
       }
     }
   }
@@ -171,8 +182,8 @@ class _PinKeyboardState extends State<PinKeyboard> {
       return _createImage(
         widget.iconBiometric ??
             SvgPicture.asset(
-              "assets/icons/biometric.svg",
-              package: "pin_keyboard",
+              'assets/icons/biometric.svg',
+              package: 'pin_keyboard',
               color: widget.iconBiometricColor ?? Color(0xff6f6f6f),
             ),
         _handleTabBiometric,
@@ -188,10 +199,19 @@ class _PinKeyboardState extends State<PinKeyboard> {
   Widget _createBackspaceIcon() => _createImage(
         widget.iconBackspace ??
             SvgPicture.asset(
-              "assets/icons/backspace.svg",
-              package: "pin_keyboard",
+              'assets/icons/backspace.svg',
+              package: 'pin_keyboard',
               color: widget.iconBackspaceColor ?? Color(0xff6f6f6f),
             ),
         _handleTabBackspace,
       );
+
+  void _restListener() {
+    widget.controller?.addResetListener(() {
+      _pinCode = '';
+      if (widget.onChange != null) {
+        widget.onChange!('');
+      }
+    });
+  }
 }

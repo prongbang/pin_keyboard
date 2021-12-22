@@ -1,6 +1,6 @@
 name: pin_keyboard
 description: A Pin Keyboard Flutter package, Make it easy to use and minimal code.
-version: 0.0.8
+version: 0.0.9
 homepage: https://github.com/prongbang/pin_keyboard
 
 environment:
