@@ -33,3 +33,7 @@
 ## [0.0.9] - PinKeyboard widget
 
 * Add class PinKeyboardController for reset data
+
+## [1.0.0] - PinKeyboard widget
+
+* Update version flutter_svg: 1.0.0
