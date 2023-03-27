@@ -123,6 +123,7 @@ class _PinKeyboardState extends State<PinKeyboard> {
                 color: widget.textColor ?? Color(0xff6f6f6f),
                 fontWeight: widget.fontWeight,
               ),
+              semanticsLabel: '${number} button',
             ),
           ),
         ),
@@ -180,31 +181,33 @@ class _PinKeyboardState extends State<PinKeyboard> {
   Widget _createBiometricIcon() {
     if (widget.enableBiometric) {
       return _createImage(
-        widget.iconBiometric ??
-            SvgPicture.asset(
-              'assets/icons/biometric.svg',
-              package: 'pin_keyboard',
-              color: widget.iconBiometricColor ?? Color(0xff6f6f6f),
-            ),
-        _handleTabBiometric,
-      );
+          widget.iconBiometric ??
+              SvgPicture.asset(
+                'assets/icons/biometric.svg',
+                package: 'pin_keyboard',
+                color: widget.iconBiometricColor ?? Color(0xff6f6f6f),
+                semanticsLabel: "Biometric button",
+              ),
+          _handleTabBiometric);
     } else {
-      return SizedBox(
-        height: widget.space,
-        width: widget.space,
-      );
+      return ExcludeSemantics(
+          excluding: true,
+          child: SizedBox(
+            height: widget.space,
+            width: widget.space,
+          ));
     }
   }
 
   Widget _createBackspaceIcon() => _createImage(
-        widget.iconBackspace ??
-            SvgPicture.asset(
-              'assets/icons/backspace.svg',
-              package: 'pin_keyboard',
-              color: widget.iconBackspaceColor ?? Color(0xff6f6f6f),
-            ),
-        _handleTabBackspace,
-      );
+      widget.iconBackspace ??
+          SvgPicture.asset(
+            'assets/icons/backspace.svg',
+            package: 'pin_keyboard',
+            color: widget.iconBackspaceColor ?? Color(0xff6f6f6f),
+            semanticsLabel: "Back button",
+          ),
+      _handleTabBackspace);
 
   void _restListener() {
     widget.controller?.addResetListener(() {
