@@ -184,7 +184,12 @@ class _PinKeyboardState extends State<PinKeyboard> {
             SvgPicture.asset(
               'assets/icons/biometric.svg',
               package: 'pin_keyboard',
-              color: widget.iconBiometricColor ?? Color(0xff6f6f6f),
+              colorFilter: (widget.iconBiometricColor != null)
+                  ? ColorFilter.mode(
+                      widget.iconBiometricColor!,
+                      BlendMode.srcIn,
+                    )
+                  : ColorFilter.mode(Color(0xff6f6f6f), BlendMode.srcIn),
             ),
         _handleTabBiometric,
       );
@@ -201,7 +206,12 @@ class _PinKeyboardState extends State<PinKeyboard> {
             SvgPicture.asset(
               'assets/icons/backspace.svg',
               package: 'pin_keyboard',
-              color: widget.iconBackspaceColor ?? Color(0xff6f6f6f),
+              colorFilter: (widget.iconBackspaceColor != null)
+                  ? ColorFilter.mode(
+                      widget.iconBackspaceColor!,
+                      BlendMode.srcIn,
+                    )
+                  : ColorFilter.mode(Color(0xff6f6f6f), BlendMode.srcIn),
             ),
         _handleTabBackspace,
       );

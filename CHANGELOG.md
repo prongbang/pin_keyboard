@@ -41,3 +41,7 @@
 ## [1.1.0] - PinKeyboard widget
 
 * Update version flutter_svg: 1.1.0
+
+## [1.1.1] - PinKeyboard widget
+
+* Update version flutter_svg: 2.0.6
