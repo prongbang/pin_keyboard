@@ -65,41 +65,87 @@ class _PinKeyboardState extends State<PinKeyboard> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _createNumber('1', _handleTabNumber),
+                _NumberWidget(
+                  widget: widget,
+                  number: '1',
+                  onPress: _handleTabNumber,
+                ),
                 Spacer(),
-                _createNumber('2', _handleTabNumber),
+                _NumberWidget(
+                  widget: widget,
+                  number: '2',
+                  onPress: _handleTabNumber,
+                ),
                 Spacer(),
-                _createNumber('3', _handleTabNumber),
+                _NumberWidget(
+                  widget: widget,
+                  number: '3',
+                  onPress: _handleTabNumber,
+                ),
               ],
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _createNumber('4', _handleTabNumber),
+                _NumberWidget(
+                  widget: widget,
+                  number: '4',
+                  onPress: _handleTabNumber,
+                ),
                 Spacer(),
-                _createNumber('5', _handleTabNumber),
+                _NumberWidget(
+                  widget: widget,
+                  number: '5',
+                  onPress: _handleTabNumber,
+                ),
                 Spacer(),
-                _createNumber('6', _handleTabNumber),
+                _NumberWidget(
+                  widget: widget,
+                  number: '6',
+                  onPress: _handleTabNumber,
+                ),
               ],
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _createNumber('7', _handleTabNumber),
+                _NumberWidget(
+                  widget: widget,
+                  number: '7',
+                  onPress: _handleTabNumber,
+                ),
                 Spacer(),
-                _createNumber('8', _handleTabNumber),
+                _NumberWidget(
+                  widget: widget,
+                  number: '8',
+                  onPress: _handleTabNumber,
+                ),
                 Spacer(),
-                _createNumber('9', _handleTabNumber),
+                _NumberWidget(
+                  widget: widget,
+                  number: '9',
+                  onPress: _handleTabNumber,
+                ),
               ],
             ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _createBiometricIcon(),
+                _BiometricIconWidget(
+                  widget: widget,
+                  onPress: _handleTabBiometric,
+                ),
                 Spacer(),
-                _createNumber('0', _handleTabNumber),
+                _NumberWidget(
+                  widget: widget,
+                  number: '0',
+                  onPress: _handleTabNumber,
+                ),
                 Spacer(),
-                _createBackspaceIcon(),
+                _BackspaceIconWidget(
+                  widget: widget,
+                  onPress: _handleTabBackspace,
+                ),
               ],
             ),
           ],
@@ -107,43 +153,6 @@ class _PinKeyboardState extends State<PinKeyboard> {
       ),
     );
   }
-
-  Widget _createNumber(String number, void Function(String) onPress) => InkWell(
-        customBorder: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(widget.space),
-        ),
-        child: Container(
-          height: widget.space,
-          width: widget.space,
-          child: Center(
-            child: Text(
-              number,
-              style: TextStyle(
-                fontSize: widget.fontSize,
-                color: widget.textColor ?? Color(0xff6f6f6f),
-                fontWeight: widget.fontWeight,
-              ),
-            ),
-          ),
-        ),
-        onTap: () {
-          onPress(number);
-        },
-      );
-
-  Widget _createImage(Widget icon, void Function() onPress) => InkWell(
-        customBorder: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(widget.space),
-        ),
-        child: Container(
-          height: widget.space,
-          width: widget.space,
-          child: Center(child: icon),
-        ),
-        onTap: () {
-          onPress();
-        },
-      );
 
   void _handleTabNumber(String number) {
     if (_pinCode.length < widget.length) {
@@ -177,10 +186,63 @@ class _PinKeyboardState extends State<PinKeyboard> {
     }
   }
 
-  Widget _createBiometricIcon() {
+  void _restListener() {
+    widget.controller?.addResetListener(() {
+      _pinCode = '';
+      if (widget.onChange != null) {
+        widget.onChange!('');
+      }
+    });
+  }
+}
+
+class _BackspaceIconWidget extends StatelessWidget {
+  final PinKeyboard widget;
+  final VoidCallback onPress;
+
+  const _BackspaceIconWidget({
+    Key? key,
+    required this.widget,
+    required this.onPress,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => _ImageWidget(
+        widget: widget,
+        icon: widget.iconBackspace ??
+            SvgPicture.asset(
+              'assets/icons/backspace.svg',
+              package: 'pin_keyboard',
+              colorFilter: (widget.iconBackspaceColor != null)
+                  ? ColorFilter.mode(
+                      widget.iconBackspaceColor!,
+                      BlendMode.srcIn,
+                    )
+                  : ColorFilter.mode(
+                      Color(0xff6f6f6f),
+                      BlendMode.srcIn,
+                    ),
+            ),
+        onPress: onPress,
+      );
+}
+
+class _BiometricIconWidget extends StatelessWidget {
+  final PinKeyboard widget;
+  final VoidCallback onPress;
+
+  const _BiometricIconWidget({
+    Key? key,
+    required this.widget,
+    required this.onPress,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     if (widget.enableBiometric) {
-      return _createImage(
-        widget.iconBiometric ??
+      return _ImageWidget(
+        widget: widget,
+        icon: widget.iconBiometric ??
             SvgPicture.asset(
               'assets/icons/biometric.svg',
               package: 'pin_keyboard',
@@ -191,7 +253,7 @@ class _PinKeyboardState extends State<PinKeyboard> {
                     )
                   : ColorFilter.mode(Color(0xff6f6f6f), BlendMode.srcIn),
             ),
-        _handleTabBiometric,
+        onPress: onPress,
       );
     } else {
       return SizedBox(
@@ -200,28 +262,69 @@ class _PinKeyboardState extends State<PinKeyboard> {
       );
     }
   }
+}
 
-  Widget _createBackspaceIcon() => _createImage(
-        widget.iconBackspace ??
-            SvgPicture.asset(
-              'assets/icons/backspace.svg',
-              package: 'pin_keyboard',
-              colorFilter: (widget.iconBackspaceColor != null)
-                  ? ColorFilter.mode(
-                      widget.iconBackspaceColor!,
-                      BlendMode.srcIn,
-                    )
-                  : ColorFilter.mode(Color(0xff6f6f6f), BlendMode.srcIn),
-            ),
-        _handleTabBackspace,
+class _ImageWidget extends StatelessWidget {
+  const _ImageWidget({
+    Key? key,
+    required this.widget,
+    required this.icon,
+    required this.onPress,
+  }) : super(key: key);
+
+  final PinKeyboard widget;
+  final Widget icon;
+  final VoidCallback onPress;
+
+  @override
+  Widget build(BuildContext context) => InkWell(
+        customBorder: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(widget.space),
+        ),
+        child: Container(
+          height: widget.space,
+          width: widget.space,
+          child: Center(child: icon),
+        ),
+        onTap: () {
+          onPress();
+        },
       );
+}
 
-  void _restListener() {
-    widget.controller?.addResetListener(() {
-      _pinCode = '';
-      if (widget.onChange != null) {
-        widget.onChange!('');
-      }
-    });
-  }
+class _NumberWidget extends StatelessWidget {
+  const _NumberWidget({
+    Key? key,
+    required this.widget,
+    required this.number,
+    required this.onPress,
+  }) : super(key: key);
+
+  final PinKeyboard widget;
+  final String number;
+  final void Function(String p1) onPress;
+
+  @override
+  Widget build(BuildContext context) => InkWell(
+        customBorder: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(widget.space),
+        ),
+        child: Container(
+          height: widget.space,
+          width: widget.space,
+          child: Center(
+            child: Text(
+              number,
+              style: TextStyle(
+                fontSize: widget.fontSize,
+                color: widget.textColor ?? Color(0xff6f6f6f),
+                fontWeight: widget.fontWeight,
+              ),
+            ),
+          ),
+        ),
+        onTap: () {
+          onPress(number);
+        },
+      );
 }
